@@ -6,8 +6,8 @@ function love.conf(t)
 end
 
 function window_conf()
-	window_width = 400
-	window_height = 250
+	window_width = 800
+	window_height = 500
 end
 
 function snake_conf()
