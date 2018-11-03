@@ -7,7 +7,6 @@ function love.load()
     y = window_height / 2
     snake = {{x, y}}
 
-    math.randomseed(os.time())
 end
 
 function love.update(dt)
@@ -40,7 +39,7 @@ function place_food(dt)
     food_timer = food_timer + dt
     if food_timer >= food_interval then 
         -- generate random location for food
-        table.insert(foods, {math.random(window_width), math.random(window_height)})
+        table.insert(foods, {love.math.random(window_width), love.math.random(window_height)})
         food_timer = food_timer - food_interval
     end
 end
