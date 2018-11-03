@@ -93,11 +93,11 @@ end
 
 function apply_mathemagics(x, y)
     atan = math.atan2(x, y)
-    hyp = math.sqrt((x*x)+(y*y))
-    c = hyp - (2*snake_radius)
-    last_angle = (math.pi/2) - atan
-    x = (c*math.sin(atan))/math.sin(math.pi/2)
-    y = (c*math.sin(last_angle))/math.sin(math.pi/2)
+    hyp = math.sqrt((x * x) + ( y * y))
+    c = hyp - (2 * snake_radius)
+    last_angle = (math.pi / 2) - atan
+    x = (c * math.sin(atan)) / math.sin(math.pi / 2)
+    y = (c * math.sin(last_angle)) / math.sin( math.pi/2 )
     return x, y
 end
 
