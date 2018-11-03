@@ -1,22 +1,22 @@
 function love.load()
-    -- initialize the world
     love.window.setMode(window_width, window_height)
-    
-    -- initialize snake position
-    x = window_width / 2
-    y = window_height / 2
-    snake = {
-        {x, y},
-        {x-2*snake_radius, y},
-        {x-4*snake_radius, y}
-    }
-
 end
 
 function love.update(dt)
      register_movement(dt)
      eat_food()
      place_food(dt)
+end
+
+function love.draw()
+    -- draw food
+    for i,food in ipairs(foods) do
+        love.graphics.setColor(1,0,0,1)
+        love.graphics.circle("fill", food[1], food[2], food_radius)
+    end
+
+    -- draw snake
+    draw_snake()
 end
 
 -- Food functions
@@ -46,7 +46,6 @@ function place_food(dt)
         food_timer = food_timer - food_interval
     end
 end
-
 
 -- Movement Functions
 function register_movement(dt)
@@ -113,19 +112,6 @@ function move_down(dt)
     if y < window_height - snake_radius then
         snake[1][2] = y + (dt * snake_speed)
     end
-end
-
-function love.draw()
-
-    -- draw food
-    for i,food in ipairs(foods) do
-        love.graphics.setColor(1,0,0,1)
-        love.graphics.circle("fill", food[1], food[2], food_radius)
-    end
-    
-    -- draw snake
-    draw_snake()
-    
 end
 
 function draw_snake()

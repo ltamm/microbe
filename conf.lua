@@ -13,6 +13,15 @@ end
 function snake_conf()
 	snake_speed = 200
 	snake_radius = 8
+
+    -- initialize snake
+    x = window_width / 2
+    y = window_height / 2
+    snake = {
+        {x, y},
+        {x-2*snake_radius, y},
+        {x-4*snake_radius, y}
+    }
 end
 
 function food_conf()
