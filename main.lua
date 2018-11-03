@@ -3,8 +3,8 @@ function love.load()
     love.window.setMode(window_width, window_height)
     
     -- initialize snake position
-    x = window_width / 3
-    y = window_height / 3
+    x = window_width / 2
+    y = window_height / 2
     snake = {
         {x, y},
         {x-2*snake_radius, y}
@@ -51,32 +51,28 @@ end
 
 -- Movement Functions
 function register_movement(dt)
-      moved = false
-      if love.keyboard.isDown("right") then 
-        moved = move_right(dt)
-    end
-     -- if love.keyboard.isDown("left") then move_left(dt) end
-    -- if love.keyboard.isDown("up") then move_up(dt) end
-    if love.keyboard.isDown("down") then 
-        moved = move_down(dt) 
-    end
+    if love.keyboard.isDown("right") then move_right(dt) end
+    if love.keyboard.isDown("left") then move_left(dt) end
+    if love.keyboard.isDown("up") then move_up(dt) end
+    if love.keyboard.isDown("down") then move_down(dt) end
 
     -- translate body 
     -- treat body as origin
-    if moved then
-        pointx = snake[1][1]-snake[2][1]
-        pointy = snake[1][2]-snake[2][2]
+    pointx = snake[1][1]-snake[2][1]
+    pointy = snake[1][2]-snake[2][2]
 
-        atan = math.atan2(pointx, pointy)
-        hyp = math.sqrt((pointx*pointx)+(pointy*pointy))
-        c = hyp - (2*snake_radius)
-        last_angle = (math.pi/2) - atan
-        x_val = (c*math.sin(atan))/math.sin(math.pi/2)
-        y_val = (c*math.sin(last_angle))/math.sin(math.pi/2)
+    atan = math.atan2(pointx, pointy)
 
-        -- undo translation
-        snake[2] = {x_val + snake[2][1], y_val + snake[2][2]}
-    end    
+    --if pointx < 0 then atan=math.pi - atan end
+
+    hyp = math.sqrt((pointx*pointx)+(pointy*pointy))
+    c = hyp - (2*snake_radius)
+    last_angle = (math.pi/2) - atan
+    x_val = (c*math.sin(atan))/math.sin(math.pi/2)
+    y_val = (c*math.sin(last_angle))/math.sin(math.pi/2)
+
+    -- undo translation
+    snake[2] = {x_val + snake[2][1], y_val + snake[2][2]}
 
 end
 
@@ -84,9 +80,7 @@ function move_right(dt)
     x = snake[1][1]
     if x < window_width - snake_radius then
         snake[1][1] = x + (dt * snake_speed)
-        return true
     end
-    return false
 end
 
 function move_left(dt)
@@ -107,9 +101,7 @@ function move_down(dt)
     y = snake[1][2]
     if y < window_height - snake_radius then
         snake[1][2] = y + (dt * snake_speed)
-        return true
     end
-    return false
 end
 
 function love.draw()
