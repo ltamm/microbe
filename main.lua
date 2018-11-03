@@ -36,7 +36,7 @@ end
 -- Food functions
 function eat_food()
     for i,food in ipairs(foods) do
-        if collides(snake[1], food, food_radius+food_radius*.8) then 
+        if collides(snake[1], food, food_radius+food_radius*2) then 
            table.remove(foods, i)
            -- Todo: determine starting location for new body segment
            --       in more sophisticated way
