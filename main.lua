@@ -3,17 +3,20 @@ function love.load()
     love.window.setMode(window_width, window_height)
     
     -- initialize snake position
-    x = window_width / 2
-    y = window_height / 2
-    snake = {{x, y}}
+    x = window_width / 3
+    y = window_height / 3
+    snake = {
+        {x, y},
+        {x-2*snake_radius, y}
+    }
 
     math.randomseed(os.time())
 end
 
 function love.update(dt)
-    register_movement(dt)
-    eat_food()
-    place_food(dt)
+     register_movement(dt)
+    --eat_food()
+    --place_food(dt)
 end
 
 -- Food functions
@@ -48,17 +51,42 @@ end
 
 -- Movement Functions
 function register_movement(dt)
-    if love.keyboard.isDown("right") then move_right(dt) end
-    if love.keyboard.isDown("left") then move_left(dt) end
-    if love.keyboard.isDown("up") then move_up(dt) end
-    if love.keyboard.isDown("down") then move_down(dt) end
+      moved = false
+      if love.keyboard.isDown("right") then 
+        moved = move_right(dt)
+    end
+     -- if love.keyboard.isDown("left") then move_left(dt) end
+    -- if love.keyboard.isDown("up") then move_up(dt) end
+    if love.keyboard.isDown("down") then 
+        moved = move_down(dt) 
+    end
+
+    -- translate body 
+    -- treat body as origin
+    if moved then
+        pointx = snake[1][1]-snake[2][1]
+        pointy = snake[1][2]-snake[2][2]
+
+        atan = math.atan2(pointx, pointy)
+        hyp = math.sqrt((pointx*pointx)+(pointy*pointy))
+        c = hyp - (2*snake_radius)
+        last_angle = (math.pi/2) - atan
+        x_val = (c*math.sin(atan))/math.sin(math.pi/2)
+        y_val = (c*math.sin(last_angle))/math.sin(math.pi/2)
+
+        -- undo translation
+        snake[2] = {x_val + snake[2][1], y_val + snake[2][2]}
+    end    
+
 end
 
 function move_right(dt)
     x = snake[1][1]
     if x < window_width - snake_radius then
         snake[1][1] = x + (dt * snake_speed)
+        return true
     end
+    return false
 end
 
 function move_left(dt)
@@ -79,7 +107,9 @@ function move_down(dt)
     y = snake[1][2]
     if y < window_height - snake_radius then
         snake[1][2] = y + (dt * snake_speed)
+        return true
     end
+    return false
 end
 
 function love.draw()
@@ -97,5 +127,12 @@ end
 
 function draw_snake()
     love.graphics.setColor(0, 1, 0, 1)
+    -- render head
     love.graphics.circle("fill", snake[1][1], snake[1][2], snake_radius)
+    -- render body
+    if #snake > 1 then
+        for i=2, #snake do
+            love.graphics.circle("line", snake[i][1], snake[i][2], snake_radius)
+        end
+    end
 end
