@@ -55,7 +55,8 @@ end
 function place_food(dt)
     food_timer = food_timer + dt
     if food_timer >= food_interval then 
-        table.insert(foods, {love.math.random(window_width), love.math.random(window_height)})
+        table.insert(foods, {love.math.random(food_radius, window_width-food_radius), 
+                             love.math.random(food_radius, window_height-food_radius)})
         food_timer = food_timer - food_interval
     end
 end
