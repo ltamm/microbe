@@ -9,14 +9,27 @@ function love.update(dt)
 end
 
 function love.draw()
-    -- draw food
+    draw_food()
+    draw_snake()
+end
+
+function draw_food()
     for i,food in ipairs(foods) do
         love.graphics.setColor(1,0,0,1)
         love.graphics.circle("fill", food[1], food[2], food_radius)
     end
+end
 
-    -- draw snake
-    draw_snake()
+function draw_snake()
+    love.graphics.setColor(0, 1, 0, 1)
+    -- render head
+    love.graphics.circle("fill", snake[1][1], snake[1][2], snake_radius)
+    -- render body
+    if #snake > 1 then
+        for i=2, #snake do
+            love.graphics.circle("line", snake[i][1], snake[i][2], snake_radius)
+        end
+    end
 end
 
 -- Food functions
@@ -111,17 +124,5 @@ function move_down(dt)
     y = snake[1][2]
     if y < window_height - snake_radius then
         snake[1][2] = y + (dt * snake_speed)
-    end
-end
-
-function draw_snake()
-    love.graphics.setColor(0, 1, 0, 1)
-    -- render head
-    love.graphics.circle("fill", snake[1][1], snake[1][2], snake_radius)
-    -- render body
-    if #snake > 1 then
-        for i=2, #snake do
-            love.graphics.circle("line", snake[i][1], snake[i][2], snake_radius)
-        end
     end
 end
