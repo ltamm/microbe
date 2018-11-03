@@ -14,14 +14,15 @@ function love.draw()
 end
 
 function draw_food()
+    love.graphics.setColor(6/255, 150/255, 71/255, 1)        
+
     for i,food in ipairs(foods) do
-        love.graphics.setColor(1,0,0,1)
         love.graphics.circle("fill", food[1], food[2], food_radius)
     end
 end
 
 function draw_snake()
-    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.setColor(79/255, 114/255, 111/255, 1)
     -- render head
     love.graphics.circle("fill", snake[1][1], snake[1][2], snake_radius)
     -- render body
