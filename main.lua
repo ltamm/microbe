@@ -22,9 +22,11 @@ end
 -- Food functions
 function eat_food()
     for i,food in ipairs(foods) do
-        if collides(snake[1], food, food_radius) then 
+        if collides(snake[1], food, food_radius+food_radius*.8) then 
            table.remove(foods, i)
-           -- todo: grow snake
+           -- Todo: determine starting location for new body segment
+           --       in more sophisticated way
+           table.insert(snake,{x+2*snake_radius,y})
         end
     end
 end
@@ -40,7 +42,6 @@ end
 function place_food(dt)
     food_timer = food_timer + dt
     if food_timer >= food_interval then 
-        -- generate random location for food
         table.insert(foods, {love.math.random(window_width), love.math.random(window_height)})
         food_timer = food_timer - food_interval
     end
