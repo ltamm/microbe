@@ -7,7 +7,8 @@ function love.load()
     y = window_height / 2
     snake = {
         {x, y},
-        {x-2*snake_radius, y}
+        {x-2*snake_radius, y},
+        {x-4*snake_radius, y}
     }
 
     math.randomseed(os.time())
@@ -15,28 +16,26 @@ end
 
 function love.update(dt)
      register_movement(dt)
-    --eat_food()
-    --place_food(dt)
+     eat_food()
+     place_food(dt)
 end
 
 -- Food functions
 function eat_food()
     for i,food in ipairs(foods) do
-        if overlaps(food) then 
+        if collides(snake[1], food, food_radius) then 
            table.remove(foods, i)
            -- todo: grow snake
         end
     end
 end
 
-function overlaps(food)
-    -- crude hitbox
-    x = snake[1][1]
-    y = snake[1][2]
-    return x < food[1] + food_radius 
-            and x > food[1] - food_radius 
-            and y < food[2] + food_radius 
-            and y > food[2] - food_radius
+function collides(collider, collidee, r)
+    -- crude hitbox for circle things
+    return  collider[1] < collidee[1] + r 
+            and collider[1] > collidee[1] - r 
+            and collider[2] < collidee[2] + r
+            and collider[2] > collidee[2] - r
 end
 
 function place_food(dt)
@@ -56,24 +55,36 @@ function register_movement(dt)
     if love.keyboard.isDown("up") then move_up(dt) end
     if love.keyboard.isDown("down") then move_down(dt) end
 
-    -- translate body 
-    -- treat body as origin
-    pointx = snake[1][1]-snake[2][1]
-    pointy = snake[1][2]-snake[2][2]
+    -- move body
+    if #snake > 1 then 
+        for i = 2, #snake do
+            x, y = apply_mathemagics(translate_to_origin(snake[i], snake[i-1]))
+            x, y = translate_to_world(x, y, snake[i])
+            snake[i] = {x, y}
+        end
+    end 
+end
 
-    atan = math.atan2(pointx, pointy)
+function translate_to_origin(origin_point, reference_point)
+    x = reference_point[1] - origin_point[1]
+    y = reference_point[2] - origin_point[2]
+    return x, y
+end
 
-    --if pointx < 0 then atan=math.pi - atan end
+function translate_to_world(x, y, origin_point)
+    x = x + origin_point[1]
+    y = y + origin_point[2]
+    return x, y
+end
 
-    hyp = math.sqrt((pointx*pointx)+(pointy*pointy))
+function apply_mathemagics(x, y)
+    atan = math.atan2(x, y)
+    hyp = math.sqrt((x*x)+(y*y))
     c = hyp - (2*snake_radius)
     last_angle = (math.pi/2) - atan
-    x_val = (c*math.sin(atan))/math.sin(math.pi/2)
-    y_val = (c*math.sin(last_angle))/math.sin(math.pi/2)
-
-    -- undo translation
-    snake[2] = {x_val + snake[2][1], y_val + snake[2][2]}
-
+    x = (c*math.sin(atan))/math.sin(math.pi/2)
+    y = (c*math.sin(last_angle))/math.sin(math.pi/2)
+    return x, y
 end
 
 function move_right(dt)
