@@ -107,5 +107,5 @@ end
 
 function draw_snake()
     love.graphics.setColor(0, 1, 0, 1)
-    love.graphics.circle("fill", seg[1], seg[2], radius)
+    love.graphics.circle("fill", snake[1][1], snake[1][2], radius)
 end
