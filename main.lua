@@ -1,24 +1,13 @@
 function love.load()
     -- initialize the world
-    window_width = 400
-    window_height = 250
     love.window.setMode(window_width, window_height)
     
-    -- initialize snake
-    x = window_width/2
-    y = window_height/2
+    -- initialize snake position
+    x = window_width / 2
+    y = window_height / 2
     snake = {{x, y}}
-    speed = 200
-    length = 1
-    radius = 8
 
-    -- initialize food
     math.randomseed(os.time())
-    food_radius = 5
-    food_timer = 0
-    food_interval = 5
-    foods = {}
-
 end
 
 function love.update(dt)
@@ -31,8 +20,6 @@ end
 function eat_food()
     for i,food in ipairs(foods) do
         if overlaps(food) then 
-           length = length + 1 
-           print(string.format("length: %s", length))
            table.remove(foods, i)
            -- todo: grow snake
         end
@@ -43,7 +30,10 @@ function overlaps(food)
     -- crude hitbox
     x = snake[1][1]
     y = snake[1][2]
-    return x<food[1]+food_radius and x>food[1]-food_radius and y<food[2]+food_radius and y>food[2]-food_radius
+    return x < food[1] + food_radius 
+            and x > food[1] - food_radius 
+            and y < food[2] + food_radius 
+            and y > food[2] - food_radius
 end
 
 function place_food(dt)
@@ -66,29 +56,29 @@ end
 
 function move_right(dt)
     x = snake[1][1]
-    if x < window_width-radius then
-        snake[1][1] = x + (dt*speed)
+    if x < window_width - snake_radius then
+        snake[1][1] = x + (dt * snake_speed)
     end
 end
 
 function move_left(dt)
     x = snake[1][1]
-    if x > radius then
-        snake[1][1] = x - (dt*speed)
+    if x > snake_radius then
+        snake[1][1] = x - (dt * snake_speed)
     end
 end
 
 function move_up(dt)
     y = snake[1][2]
-    if y > radius then
-        snake[1][2] = y - (dt*speed)
+    if y > snake_radius then
+        snake[1][2] = y - (dt * snake_speed)
     end
 end
 
 function move_down(dt)
     y = snake[1][2]
-    if y < window_height-radius then
-        snake[1][2] = y + (dt*speed)
+    if y < window_height - snake_radius then
+        snake[1][2] = y + (dt * snake_speed)
     end
 end
 
@@ -107,5 +97,5 @@ end
 
 function draw_snake()
     love.graphics.setColor(0, 1, 0, 1)
-    love.graphics.circle("fill", snake[1][1], snake[1][2], radius)
+    love.graphics.circle("fill", snake[1][1], snake[1][2], snake_radius)
 end
