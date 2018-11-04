@@ -13,11 +13,11 @@ function love.draw()
     draw_snake()
 end
 
-function draw_food()
-    love.graphics.setColor(6/255, 150/255, 71/255, 1)        
-
+function draw_food()    
     for i,food in ipairs(foods) do
-        love.graphics.circle("fill", food[1], food[2], food_radius)
+        love.graphics.setColor(food[3])   
+        love.graphics.setLineWidth(0.2)     
+        love.graphics.circle("line", food[1], food[2], food_radius)
     end
 end
 
@@ -55,9 +55,18 @@ end
 
 function place_food(dt)
     food_timer = food_timer + dt
+
+    -- Randomly determine food colour
+    food_colour = food_colours[love.math.random(#food_colours)]
+    alpha = (1/(love.math.random(2,5)))+0.5    
+    table.insert(food_colour, 0.5)
+
     if food_timer >= food_interval then 
         table.insert(foods, {love.math.random(food_radius, window_width-food_radius), 
-                             love.math.random(food_radius, window_height-food_radius)})
+                             love.math.random(food_radius, window_height-food_radius),
+                             food_colour
+                            }
+                    )
         food_timer = food_timer - food_interval
     end
 end
