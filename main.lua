@@ -1,5 +1,6 @@
 function love.load()
     love.window.setMode(window_width, window_height)
+    love.window.setTitle("Microbe")
     love.graphics.setBackgroundColor{32/255, 42/255, 48/255}
     love.graphics.setFont(love.graphics.newFont(20))
 end
